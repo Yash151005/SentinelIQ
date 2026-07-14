@@ -45,6 +45,10 @@ PQC_METADATA = {
 }
 
 
+# In-memory mapping to associate public keys with private keys for KEM simulation
+_key_relations = {}
+
+
 # ---------------------------------------------------------------------------
 # Simulated Kyber Key Generation
 # ---------------------------------------------------------------------------
@@ -89,6 +93,9 @@ def generate_keypair() -> Dict:
     private_key_bytes = s.tobytes()
     public_key_hash = hashlib.sha256(public_key_bytes).hexdigest()
     private_key_hash = hashlib.sha256(private_key_bytes).hexdigest()
+
+    _key_relations[public_key_hash] = private_key_hash
+    _key_relations[private_key_hash] = public_key_hash
 
     return {
         "public_key": public_key_hash,
@@ -182,9 +189,9 @@ def _simulate_kem_encapsulate(public_key: str) -> bytes:
 
 def _simulate_kem_decapsulate(private_key: str) -> bytes:
     """Simulate Kyber KEM decapsulation (derive shared secret from private key)."""
-    # In real Kyber, this uses the secret key to extract the shared secret
-    # For simulation, we ensure same derivation path
-    return hashlib.sha256(f"kyber-kem-{private_key}".encode()).digest()
+    # Look up corresponding public key to match shared secret
+    public_key = _key_relations.get(private_key, private_key)
+    return hashlib.sha256(f"kyber-kem-{public_key}".encode()).digest()
 
 
 # ---------------------------------------------------------------------------
