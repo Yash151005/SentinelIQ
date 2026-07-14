@@ -599,13 +599,13 @@ def initialize_app():
 
 # Define Page objects
 home_page = st.Page(show_home, title="Platform Overview", icon="🛡️", default=True)
-dashboard_page = st.Page("pages/1_🏠_Dashboard.py", title="Dashboard", icon="🏠")
-anomaly_page = st.Page("pages/2_🔍_Anomaly_Engine.py", title="Anomaly Engine", icon="🔍")
-vault_page = st.Page("pages/3_🔐_Credential_Vault.py", title="Credential Vault", icon="🔐")
-access_page = st.Page("pages/4_🛡️_Access_Control.py", title="Access Control", icon="🛡️")
-watchlist_page = st.Page("pages/5_👁️_Watchlist.py", title="Watchlist", icon="👁️")
-forensics_page = st.Page("pages/6_📋_Audit_Forensics.py", title="Audit Forensics", icon="📋")
-quantum_page = st.Page("pages/7_⚛️_Quantum_Monitor.py", title="Quantum Monitor", icon="⚛️")
+dashboard_page = st.Page("views/1_🏠_Dashboard.py", title="Dashboard", icon="🏠")
+anomaly_page = st.Page("views/2_🔍_Anomaly_Engine.py", title="Anomaly Engine", icon="🔍")
+vault_page = st.Page("views/3_🔐_Credential_Vault.py", title="Credential Vault", icon="🔐")
+access_page = st.Page("views/4_🛡️_Access_Control.py", title="Access Control", icon="🛡️")
+watchlist_page = st.Page("views/5_👁️_Watchlist.py", title="Watchlist", icon="👁️")
+forensics_page = st.Page("views/6_📋_Audit_Forensics.py", title="Audit Forensics", icon="📋")
+quantum_page = st.Page("views/7_⚛️_Quantum_Monitor.py", title="Quantum Monitor", icon="⚛️")
 
 
 def main():
