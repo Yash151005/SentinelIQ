@@ -110,4 +110,40 @@ Use these demo accounts to log into the SentinelIQ platform:
 
 ---
 
+## ⚖️ Role-Based Access Control (RBAC) Compliance Matrix
+
+SentinelIQ strictly adheres to the **Principle of Least Privilege (PoLP)** and **Segregation of Duties (SoD)** in compliance with RBI Cybersecurity guidelines for scheduled commercial banks.
+
+### 📊 Page Access Rights
+
+| Page / Module | SUPERADMIN | DBA | NETWORK_ADMIN | BRANCH_MANAGER | TELLER |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| **🏠 Dashboard** | **Allowed** ✅ | **Allowed** ✅ | **Allowed** ✅ | **Allowed** ✅ | **Allowed** (Own Only) 👤 |
+| **🔍 Anomaly Engine** | **Allowed** ✅ | **Allowed** ✅ | **Allowed** ✅ | **Restricted** ❌ | **Restricted** ❌ |
+| **🔐 Credential Vault** | **Allowed** ✅ | **Allowed** ✅ | **Restricted** ❌ | **Restricted** ❌ | **Restricted** ❌ |
+| **🛡️ Access Control** | **Allowed** ✅ | **Restricted** ❌ | **Restricted** ❌ | **Restricted** ❌ | **Restricted** ❌ |
+| **👁️ Watchlist** | **Allowed** ✅ | **Allowed** ✅ | **Allowed** ✅ | **Restricted** ❌ | **Restricted** ❌ |
+| **📋 Audit Forensics** | **Allowed** ✅ | **Allowed** ✅ | **Allowed** ✅ | **Allowed** (Branch Only) 📌 | **Restricted** ❌ |
+| **⚛️ Quantum Monitor** | **Allowed** ✅ | **Allowed** ✅ | **Allowed** ✅ | **Restricted** ❌ | **Restricted** ❌ |
+
+### 🛠️ Feature Access Control & Segregation of Duties
+
+1. **SUPERADMIN**:
+   - **Access**: Global configuration override, policy changes, user role elevation, simulated PQC vault overrides.
+   - **Restriction**: Excluded from direct transaction processing to prevent administrative tampering with ledgers.
+2. **DBA**:
+   - **Access**: Database log analysis, query monitors, database health checks, PQC credential auditing.
+   - **Restriction**: Forbidden from changing network policies or modifying RBAC user hierarchies.
+3. **NETWORK_ADMIN**:
+   - **Access**: Traffic exfiltration audits, connection timelines, HNDL exfiltration detection.
+   - **Restriction**: Strictly prohibited from running database queries or decrypting database/pqc-vault payloads.
+4. **BRANCH_MANAGER**:
+   - **Access**: Local branch performance logs, compliance forensics for their specific branch, audit timelines.
+   - **Restriction**: Blocked from ML model configurations, network details, or key rotation control.
+5. **TELLER**:
+   - **Access**: View own login metrics and own audit logs.
+   - **Restriction**: Strictly sandboxed. Blocked from viewing system logs, alerts, database queries, and credentials of any other system entity.
+
+---
+
 *SentinelIQ Platform — Finspark Hackathon 2026*
