@@ -233,3 +233,18 @@ def get_access_decision_log(limit: int = 100) -> List[Dict]:
         sort=[("timestamp", -1)],
         limit=limit,
     )
+
+
+def check_page_permission(role: Optional[str], page_name: str) -> bool:
+    """Check if a role is authorized to view a specific application page."""
+    if not role:
+        return False
+        
+    page_permissions = {
+        "SUPERADMIN": ["Dashboard", "Anomaly_Engine", "Credential_Vault", "Access_Control", "Watchlist", "Audit_Forensics", "Quantum_Monitor"],
+        "DBA": ["Dashboard", "Anomaly_Engine", "Credential_Vault", "Watchlist", "Audit_Forensics", "Quantum_Monitor"],
+        "NETWORK_ADMIN": ["Dashboard", "Anomaly_Engine", "Watchlist", "Audit_Forensics", "Quantum_Monitor"],
+        "BRANCH_MANAGER": ["Dashboard", "Audit_Forensics"],
+        "TELLER": ["Dashboard"],
+    }
+    return page_name in page_permissions.get(role, [])

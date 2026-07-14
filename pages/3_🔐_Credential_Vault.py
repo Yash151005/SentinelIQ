@@ -23,6 +23,12 @@ if not st.session_state.get("authenticated"):
     st.warning("🔒 Please login from the main page.")
     st.stop()
 
+from utils import rbac_engine
+
+if not rbac_engine.check_page_permission(st.session_state.get("role"), "Credential_Vault"):
+    st.error("❌ Access Denied: You do not have permission to view the Credential Vault.")
+    st.stop()
+
 if "initialized" not in st.session_state:
     data_simulator.seed_database()
     st.session_state["initialized"] = True
