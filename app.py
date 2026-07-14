@@ -394,8 +394,8 @@ def show_login_page():
 # Sidebar
 # ---------------------------------------------------------------------------
 
-def show_sidebar():
-    """Display the role-aware sidebar."""
+def show_sidebar_header():
+    """Display the top part of the role-aware sidebar."""
     with st.sidebar:
         st.markdown("""
             <div class="sentinel-title" style="font-size: 1.4rem;">🛡️ SentinelIQ</div>
@@ -454,9 +454,14 @@ def show_sidebar():
                 </div>
             </div>
         """, unsafe_allow_html=True)
-
         st.markdown("---")
+        st.markdown("##### 🧭 Navigation")
 
+
+def show_sidebar_footer():
+    """Display the bottom part of the role-aware sidebar (logout)."""
+    with st.sidebar:
+        st.markdown("---")
         # Logout
         if st.button("🚪 Logout", use_container_width=True):
             for key in list(st.session_state.keys()):
@@ -464,8 +469,8 @@ def show_sidebar():
             st.rerun()
 
         st.markdown("""
-            <div style="position: fixed; bottom: 16px; color: #4A5E80;
-                        font-size: 0.7rem; font-family: 'JetBrains Mono', monospace;">
+            <div style="margin-top: 20px; color: #4A5E80;
+                        font-size: 0.75rem; font-family: 'JetBrains Mono', monospace;">
                 SentinelIQ v1.0 | Finspark 2026
             </div>
         """, unsafe_allow_html=True)
@@ -592,16 +597,43 @@ def initialize_app():
             st.session_state["seed_stats"] = stats
 
 
+# Define Page objects
+home_page = st.Page(show_home, title="Platform Overview", icon="🛡️", default=True)
+dashboard_page = st.Page("pages/1_🏠_Dashboard.py", title="Dashboard", icon="🏠")
+anomaly_page = st.Page("pages/2_🔍_Anomaly_Engine.py", title="Anomaly Engine", icon="🔍")
+vault_page = st.Page("pages/3_🔐_Credential_Vault.py", title="Credential Vault", icon="🔐")
+access_page = st.Page("pages/4_🛡️_Access_Control.py", title="Access Control", icon="🛡️")
+watchlist_page = st.Page("pages/5_👁️_Watchlist.py", title="Watchlist", icon="👁️")
+forensics_page = st.Page("pages/6_📋_Audit_Forensics.py", title="Audit Forensics", icon="📋")
+quantum_page = st.Page("pages/7_⚛️_Quantum_Monitor.py", title="Quantum Monitor", icon="⚛️")
+
+
 def main():
     """Main application entry point."""
     inject_custom_css()
     initialize_app()
 
     if not st.session_state.get("authenticated"):
-        show_login_page()
+        login_page = st.Page(show_login_page, title="Login", icon="🔒")
+        pg = st.navigation([login_page], position="hidden")
+        pg.run()
     else:
-        show_sidebar()
-        show_home()
+        role = st.session_state.get("role")
+        user_pages = [home_page, dashboard_page]
+
+        if role == "SUPERADMIN":
+            user_pages += [anomaly_page, vault_page, access_page, watchlist_page, forensics_page, quantum_page]
+        elif role == "DBA":
+            user_pages += [anomaly_page, vault_page, watchlist_page, forensics_page, quantum_page]
+        elif role == "NETWORK_ADMIN":
+            user_pages += [anomaly_page, watchlist_page, forensics_page, quantum_page]
+        elif role == "BRANCH_MANAGER":
+            user_pages += [forensics_page]
+
+        pg = st.navigation(user_pages)
+        show_sidebar_header()
+        pg.run()
+        show_sidebar_footer()
 
 
 if __name__ == "__main__":
